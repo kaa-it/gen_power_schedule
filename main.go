@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -35,4 +36,20 @@ func main() {
 		ds = ds.AddDate(0, 0, 1)
 		ms++
 	}
+
+	fmt.Println(strconv.Quote(ds.Format(time.RFC3339)))
+
+	dd := time.Date(2021, time.January, 1, 2, 3, 4, 0, time.Local)
+
+	fmt.Println(strconv.Quote(dd.Format(time.RFC3339)))
+
+	tt, err := time.Parse(time.RFC3339, "2020-01-02T00:00:00+03:00")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(tt)
+	}
+
+	y, m, d := tt.UTC().Date()
+	fromSecs := time.Date(y, m, d, 0, 0, 0, 0, time.UTC).Unix()
 }
