@@ -26,7 +26,7 @@ func main() {
 		ts := time.Date(ds.Year(), ds.Month(), ds.Day(), hs, ms, 0, 0, time.UTC)
 		te := ts.Add(time.Hour * 8)
 
-		fmt.Printf("%s,%s,%s\n",
+		fmt.Fprintf(f, "%s,%s,%s\n",
 			ds.Format("01-02"),
 			ts.Format("15:04"),
 			te.Format("15:04"),
