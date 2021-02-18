@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"os"
 	"strconv"
@@ -28,7 +29,7 @@ func test() {
 	_ = time.Date(y, m, d, 0, 0, 0, 0, time.UTC).Unix()
 }
 
-func main() {
+func createFile() {
 	f, err := os.Create("2021.csv")
 	if err != nil {
 		fmt.Println("Cannot create file", err)
@@ -58,4 +59,44 @@ func main() {
 		ms++
 	}
 
+}
+
+func loadFile() {
+	f, err := os.Open("2021.csv")
+	if err != nil {
+		fmt.Println("Cannot open file", err)
+		return
+	}
+
+	defer f.Close()
+
+	reader := csv.NewReader(f)
+	reader.FieldsPerRecord = 3
+
+	allRecords, err := reader.ReadAll()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for _, rec := range allRecords {
+		fmt.Printf("%s///%s///%s\n", rec[0], rec[1], rec[2])
+		on, err := time.Parse(time.RFC3339, "2021-"+rec[0]+"T"+rec[1]+":00Z")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		off, err := time.Parse(time.RFC3339, "2021-"+rec[0]+"T"+rec[2]+":00Z")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		fmt.Println(on, "|||", off)
+	}
+}
+
+func main() {
+	loadFile()
 }
